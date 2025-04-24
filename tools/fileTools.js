@@ -30,3 +30,23 @@ export async function append_file({ path, content }) {
         return `❌ Error appending file: ${err.message}`;
     }
 }
+
+export async function delete_file({ path }) {
+    console.log("🔨 Tool Called: delete_file", path);
+    try {
+        await fs.unlink(path);
+        return `✅ Deleted ${path}`;
+    } catch (err) {
+        return `❌ Error deleting file: ${err.message}`;
+    }
+}
+
+export async function write_folder({ path }) {
+    console.log("🔨 Tool Called: write_folder", path);
+    try {
+        await fs.mkdir(path);
+        return `✅ Created Folder ${path}`;
+    } catch (err) {
+        return `❌ Error making folder: ${err.message}`;
+    }
+}

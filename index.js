@@ -1,7 +1,7 @@
 import "dotenv/config";
 import OpenAI from "openai";
 import readline from "readline";
-import { read_file, write_file, append_file } from "./tools/fileTools.js";
+import { read_file, write_file, append_file, delete_file, write_folder } from "./tools/fileTools.js";
 
 const openai = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -26,6 +26,14 @@ const availableTools = {
   append_file: {
     fn: append_file,
     description: "Appends content to a file. Expects { path, content }.",
+  },
+  delete_file: {
+    fn: delete_file,
+    description: "Deletes file. Expects { path }.",
+  },
+  write_folder: {
+    fn: write_folder,
+    description: "Creates folders. Expects { path }.",
   },
 };
 
@@ -53,6 +61,8 @@ Available Tools:
 - read_file: Reads content from a file path.
 - write_file: Writes content to a file. Expects { path, content }.
 - append_file: Appends content to a file. Expects { path, content }.
+- delete_file: Deletes files and folders. Expects { path }.
+- write_folder: Creates folders. Expects { path }.
 `;
 
 async function main() {
@@ -97,7 +107,7 @@ async function main() {
             if (availableTools[toolName]) {
               console.log(`🔨 Tool Called: ${toolName}`, toolInput);
               let output;
-              if (toolName === "read_file") {
+              if (toolName === "read_file" || toolName === "delete_file" || toolName === "write_folder") {
                 // read_file expects just a path string
                 output = await availableTools[toolName].fn(toolInput);
               } else if (
