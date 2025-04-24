@@ -1,5 +1,5 @@
-// tools/fileTools.js
 import fs from 'fs/promises';
+import { exec } from 'child_process';
 
 export async function read_file(path) {
     console.log("🔨 Tool Called: read_file", path);
@@ -50,3 +50,17 @@ export async function write_folder({ path }) {
         return `❌ Error making folder: ${err.message}`;
     }
 }
+
+export function run_command(command) {
+    return new Promise((resolve, reject) => {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          resolve(`Command execution error: ${error.message}\nStderr: ${stderr}`);
+          return;
+        }
+        
+        // Return both stdout and stderr for completeness
+        resolve(`${stdout}${stderr ? `\nStderr: ${stderr}` : ''}`);
+      });
+    });
+  }
